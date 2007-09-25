@@ -45,7 +45,7 @@ hints(x, class = class(x))
 If specified, the argument {\tt x} can be any R object. For example, {\tt x}
 might have been created by \verb|x <- lm(y ~ z)|. {\tt hints} determines the
 S3 class of the object, and then looks for functions that operate on that
-class. The S3 class of an object is a character vector, and maybe consist of
+class. The S3 class of an object is a character vector, and may consist of
 multiple strings, as, for example, a generalized linear model which has class
 {\tt c("glm", "lm")}. If {\tt x} is not given, then you can specify the {\tt
 class} you want hints about as character vector.
