@@ -20,16 +20,15 @@ hints(x, class = base::class(x))
 }
 }
 \value{
-This function returns an object of class \code{c("hints","data.frame")}
+This function returns an object with S3 class \code{c("hints","matrix")}
 giving a list of functions that accept objects of the specified class, the
 package that includes the function, and 
 a short description of what that function does.  The descriptions are taken
 from the title entry of the documentation for the function.
 
-The \code{print} function prints the output in a sensible way.  All the arguments
-to \code{print.data.frame} can be used.  The object
+The \code{print} function prints the output in a sensible way.  The object
 is compatible with the \code{xtable} package to get LaTeX output, and all the
-arguments to \code{xtable} can be used as well.
+arguments to \code{xtable} can be used.
 
 }
 \author{This function was written by Hadley Wickham,
@@ -38,16 +37,13 @@ the useR! 2006 conference in Vienna.
 Minor changes were made by Sanford Weisberg,
 \email{sandy@stat.umn.edu}}
 
-%\section{Warning }{The argument \code{load.packages=TRUE} loads all the
-%packages in your library, and if loading a library has any side effects
-%these side effects will occur, and you may get an error.
-%}
+\seealso{\code{\link{print.hints}}}
+
 \examples{
-x <- rnorm(10)
-y <- rnorm(10)
-m <- lm(y ~ x)
+m <- lm(BOD)
 hints(m)
-hints(class="glm")
+# print hints as a "LaTeX-style tagged description"
+print(hints(class="glm"),style="list")
 \dontrun{
 library(xtable)
 xtable(hints(m))
