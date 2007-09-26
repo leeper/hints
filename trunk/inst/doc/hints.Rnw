@@ -2,7 +2,7 @@
 \usepackage{Rnews,Sweave}
 \usepackage[round]{natbib}
 \bibliographystyle{abbrvnat}
-
+%%\VignetteIndexEntry{About the Hints Function}
 \begin{document}
 
 \begin{article}
@@ -41,7 +41,6 @@ The {\tt hints} function has two arguments:
 \begin{verbatim}
 hints(x, class = class(x))
 \end{verbatim}
-
 If specified, the argument {\tt x} can be any R object. For example, {\tt x}
 might have been created by \verb|x <- lm(y ~ z)|. {\tt hints} determines the
 S3 class of the object, and then looks for functions that operate on that
@@ -55,9 +54,15 @@ packages. For example, the hints for {\tt lm} would be different if either the
 {\tt car} or the {\tt alr3} packages have been loaded, since both of these add
 methods and functions for {\tt lm} objects. Similarly, {\tt
 hints(class="lda")} would return methods only if the package {\tt MASS} were
-loaded, since all the relevant methods and functions are in that package.
+loaded, since all the relevant methods and functions are in that package.v
 
-The {\tt hints} function is compatible with {\tt xtable} in the
+Objects created by {\tt hints} are printed using the {\tt 
+formatDL} function, so, for example, you can type
+\begin{verbatim}
+print(hints(x)),type="list")
+\end{verbatim}
+and get a a \LaTeX-style tagged description list. The {\tt
+hints} function is also compatible with {\tt xtable} in the
 {\tt xtable} package. The commands:
 
 \begin{verbatim}
