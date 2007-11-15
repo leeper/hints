@@ -25,9 +25,62 @@ library(hints)
 options(width=100)
 @
 \begin{figure*}[hbt]
-<<>>=
-hints(class="lm")
-@
+\begin{Schunk}
+\begin{Sinput}
+> hints(class = "lm")
+\end{Sinput}
+\begin{Soutput}
+Functions for lm in package 'base'
+kappa                         Estimate the Condition Number
+base-defunct                  Defunct Functions in Base Package
+Functions for lm in package 'methods'
+setOldClass                   Specify Names for Old-Style Classes
+Functions for lm in package 'stats'
+add1                          Add or Drop All Possible Single Terms to a Model
+alias                         Find Aliases (Dependencies) in a Model
+anova.lm                      ANOVA for Linear Model Fits
+case.names.lm                 Case and Variable Names of Fitted Models
+cooks.distance.lm             Regression Deletion Diagnostics
+dfbeta.lm                     Regression Deletion Diagnostics
+dfbetas.lm                    Regression Deletion Diagnostics
+drop1.lm                      Add or Drop All Possible Single Terms to a Model
+dummy.coef.lm                 Extract Coefficients in Original Coding
+effects                       Effects from Fitted Model
+family.lm                     Accessing Linear Model Fits
+formula.lm                    Accessing Linear Model Fits
+hatvalues.lm                  Regression Deletion Diagnostics
+influence.lm                  Regression Diagnostics
+labels.lm                     Accessing Linear Model Fits
+logLik                        Extract Log-Likelihood
+model.frame.lm                Extracting the "Environment" of a Model Formula
+model.matrix.lm               Construct Design Matrices
+plot.lm                       Plot Diagnostics for an lm Object
+predict.lm                    Predict method for Linear Model Fits
+print.lm                      Fitting Linear Models
+proj                          Projections of Models
+residuals.lm                  Accessing Linear Model Fits
+rstandard.lm                  Regression Deletion Diagnostics
+rstudent.lm                   Regression Deletion Diagnostics
+summary.lm                    Summarizing Linear Model Fits
+variable.names.lm             Case and Variable Names of Fitted Models
+vcov                          Calculate Variance-Covariance Matrix for a Fitted Model
+                              Object
+case.names                    Case and Variable Names of Fitted Models
+dummy.coef                    Extract Coefficients in Original Coding
+influence.measures            Regression Deletion Diagnostics
+lm                            Fitting Linear Models
+lm.influence                  Regression Diagnostics
+lm.fit                        Fitter Functions for Linear Models
+model.frame                   Extracting the "Environment" of a Model Formula
+model.matrix                  Construct Design Matrices
+stats-defunct                 Defunct Functions in Package stats
+Functions for lm in package 'unknown'
+confint.lm                    NA
+deviance.lm                   NA
+extractAIC.lm                 NA
+simulate.lm                   NA
+\end{Soutput}
+\end{Schunk}
 \caption{\label{fig1} Hints for the {\tt lm} class.}
 \end{figure*}
 
@@ -36,10 +89,10 @@ the class you specify, as well as searching the documentation to find all
 mentions of the class. You can then use the usual help mechanism to learn more
 about each of these methods and functions.
 
-The {\tt hints} function has two arguments:
+The {\tt hints} function has three arguments:
 
 \begin{verbatim}
-hints(x, class = class(x))
+hints(x, class = class(x), all.packages=FALSE)
 \end{verbatim}
 If specified, the argument {\tt x} can be any R object. For example, {\tt x}
 might have been created by \verb|x <- lm(y ~ z)|. {\tt hints} determines the
@@ -49,40 +102,43 @@ multiple strings, as, for example, a generalized linear model which has class
 {\tt c("glm", "lm")}. If {\tt x} is not given, then you can specify the {\tt
 class} you want hints about as character vector.
 
-The hints function will look for methods and functions in all currently loaded
-packages. For example, the hints for {\tt lm} would be different if either the
-{\tt car} or the {\tt alr3} packages have been loaded, since both of these add
-methods and functions for {\tt lm} objects. Similarly, {\tt
-hints(class="lda")} would return methods only if the package {\tt MASS} were
-loaded, since all the relevant methods and functions are in that package.v
+The hints function will look for methods and functions in all
+currently loaded packages. For example, the hints for {\tt lm}
+would be different if either the {\tt car} or the {\tt alr3}
+packages have been loaded, since both of these add methods and
+functions for {\tt lm} objects. Similarly, {\tt
+hints(class="lda")} would return methods only if the package
+{\tt MASS} were loaded, since all the relevant methods and
+functions are in that package. You can get hints for all your
+packages by setting {\tt all.packages=TRUE}.
 
-Objects created by {\tt hints} are printed using the {\tt 
-formatDL} function, so, for example, you can type
-\begin{verbatim}
-print(hints(x)),type="list")
-\end{verbatim}
-and get a a \LaTeX-style tagged description list. The {\tt
-hints} function is also compatible with {\tt xtable} in the
-{\tt xtable} package. The commands:
+The hints package also includes an {\tt xtable} method so, for 
+example, {\tt xtable(hints(m1))} would have produced a version 
+of Figure~\ref{fig1}, but in \LaTeX\ format. 
 
-\begin{verbatim}
-library(xtable)
-xtable(hints(class="lm"))
-\end{verbatim}
+The function isn't foolproof, as it depends on the quality of 
+documentation written by others. It may find irrelevant 
+functions if the name of the class appears in the documentation 
+for the irrelevant function.  It can miss functions, too.  For 
+example, the function {\tt coeftest} in the {\tt lmtest} 
+package can be used with {\tt lm} objects by applying the 
+function {\tt coeftest.default}.  Hints can't figure this out 
+because there is no explicit mention of {\tt lm} in the 
+function or the documentation, and so it misses the function.  
+If the regression had been done using {\tt glm} rather than 
+{\tt lm}, {\tt hints} would have found {\tt coeftest.glm}.
 
-\noindent will put the output from {\tt hints} in a \LaTeX\ table.
-
-The function isn't foolproof, as it depends on the quality of documentation
-written by others. It may find irrelevant functions if the name of the class
-appears in the documentation in an irrelevant function. The explanations of
-what the methods and functions do may be more generic than one might want, if
-the title of the help page is too generic. In some cases, no explanation is
-found. For example, {\tt simulate.lm} is shown in Figure~\ref{fig1}, but its
-description is missing. The help page for {\tt simulate} mentions the {\tt lm}
-class, but no page is available for {\tt simulate.lm}, and so the {\tt hints}
-function doesn't know where to get documentation. Finally, the hints function
-can only find hints for S3 objects, not for S4. Nevertheless, this simple
-function can be a useful tool, if you are willing to take a hint.
+The explanations of what the methods and functions do may be
+more generic than one might want, if the title of the help page
+is too generic. In some cases, no explanation is found. For
+example, {\tt simulate.lm} is shown in Figure~\ref{fig1}, but
+its description is missing. The help page for {\tt simulate}
+mentions the {\tt lm} class, but no page is available for {\tt
+simulate.lm}, and so the {\tt hints} function doesn't know
+where to get documentation. Finally, the hints function can
+only find hints for S3 objects, not for S4. Nevertheless, this
+simple function can be a useful tool, if you are willing to
+take a hint.
 
 \begin{flushleft}
 {\em Sanford Weisberg\\

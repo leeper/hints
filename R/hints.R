@@ -4,8 +4,8 @@
 #X hints(class="mle")
 #X hints(a)
 
-#hints <- function(x, class=base::class(x), load.libraries=FALSE) {
-hints <- function(x, class=base::class(x)) {    
+hints <- function(x, class=base::class(x), allPackages=FALSE) {
+#hints <- function(x, class=base::class(x)) {    
   all.methods <- function(classes) {
     methods <- do.call(rbind,lapply(classes, function(x) {
         m <- methods(class=x)
@@ -33,7 +33,7 @@ hints <- function(x, class=base::class(x)) {
         return(invisible())
     }
 
-#    if (load.libraries) {
+#   if (allPackages) {
 #        load.package <- function(x) eval(substitute(library(x),list(x=x)))
 #        capture.output(sapply(.packages(all.available=T), load.package))
 #    }
@@ -79,26 +79,51 @@ hints <- function(x, class=base::class(x)) {
     output <- output[or,,drop=FALSE]
 # change NA package to "unknown"
     output[is.na(output[,2]),2]<-"unknown"
-    class(output) <- c("hints","matrix")
+    output <- list(results=output,class=class)
+    class(output) <- c("hints")
     output
-}
+}                       
 
-print.hints <- function(x, outFile="",...){
-    if (outFile == "") 
-        outFile <- stdout()
-    else if (is.character(outFile)) {
-        outFile <- file(outFile, "w")
-        on.exit(close(outFile))
+print.hints <-
+function (x, outFile="window", ...)
+{
+    db <- x$results
+    stout <- if(outFile=="window") FALSE else TRUE
+    colnames(db) <- c("Function","Package","Description")
+    out <- if (nrow(db) == 0)
+        NULL
+    else lapply(split(1:nrow(db), db[, "Package"]), function(ind) db[ind,
+        c("Function","Description"), drop = FALSE])
+    outFile <-if (stout == FALSE) tempfile("RHints") 
+         else stdout()
+    outConn <- if(stout == FALSE) file(outFile, open = "w")
+        else outFile
+    first <- TRUE
+    for (pkg in names(out)) { 
+        writeLines(paste(ifelse(first, "", "\n"),
+            "Functions for ",paste(x$class,collapse=", "), " in package ",
+            sQuote(pkg), ":\n", sep = ""), outConn)
+        writeLines(formatDL(out[[pkg]][, "Function"], out[[pkg]][,
+            "Description"]), outConn)
+        first <- FALSE
     }
-    for(pack in unique(as.character(x[,2]))) {
-         writeLines(paste("...Package =",pack),   outFile)
-         writeLines(formatDL(x[x[,2]==pack,1],
-                             x[x[,2]==pack,3],...),outFile) }
-	  invisible()
+    if (first) {
+        if (stout == FALSE) close(outConn)
+        unlink(outFile)
+        writeLines(paste("no", tolower(x$title), "found"))
+    }
+    else {
+        if (!is.null(x$footer))
+            writeLines(c("\n", x$footer), outConn)
+        if (stout == FALSE) {close(outConn)
+          file.show(outFile, delete.file = TRUE,
+            title = paste("R functions for", paste(x$class,collapse=", ")))}
+    }                
+    invisible(x)
 }
 
 xtable.hints <- function(x,align="llll",...) {
-  x <- as.data.frame(x[,c(2,1,3)])
+  x <- as.data.frame(x$results[,c(2,1,3)])
   colnames(x) <- c("Package","Function","Task")
 	xtable(x,align=align,...)
 }
