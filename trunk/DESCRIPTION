@@ -7,4 +7,5 @@ Author: Hadley Wickham <h.wickham@gmail.com>, Sanford Weisberg <sandy@stat.umn.e
 Maintainer: Hadley Wickham <h.wickham@gmail.com>
 Suggets: xtable 
 Description: Gives hints on what functions you might want to apply to an object you have created.
+URL: http://hints.googlecode.com
 License: GPL version 2 or newer
