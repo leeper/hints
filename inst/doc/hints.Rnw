@@ -110,7 +110,7 @@ functions for {\tt lm} objects. Similarly, {\tt
 hints(class="lda")} would return methods only if the package
 {\tt MASS} were loaded, since all the relevant methods and
 functions are in that package. You can get hints for all your
-packages by setting {\tt all.packages=TRUE}.
+packages by setting {\tt all.packages=TRUE}, but note that this works by {\tt require}'ing all available packages so may be time consuming.
 
 The hints package also includes an {\tt xtable} method so, for 
 example, {\tt xtable(hints(m1))} would have produced a version 

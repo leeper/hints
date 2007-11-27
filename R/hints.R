@@ -4,8 +4,7 @@
 #X hints(class="mle")
 #X hints(a)
 
-hints <- function(x, class=base::class(x), allPackages=FALSE) {
-#hints <- function(x, class=base::class(x)) {    
+hints <- function(x, class=base::class(x), all.packages=FALSE) {
   all.methods <- function(classes) {
     methods <- do.call(rbind,lapply(classes, function(x) {
         m <- methods(class=x)
@@ -33,10 +32,9 @@ hints <- function(x, class=base::class(x), allPackages=FALSE) {
         return(invisible())
     }
 
-#   if (allPackages) {
-#        load.package <- function(x) eval(substitute(library(x),list(x=x)))
-#        capture.output(sapply(.packages(all.available=T), load.package))
-#    }
+  if (all.packages) {
+      capture.output(sapply(.packages(all.available=T), require, character.only = TRUE))
+   }
     
     db <- eval(utils:::.hsearch_db())
     if (is.null(db)) {

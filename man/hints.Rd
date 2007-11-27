@@ -7,14 +7,14 @@ that exist to act on that object can be difficult.  This function provides a
 simple list of these functions.
 }
 \usage{
-hints(x, class = base::class(x), allPackages=FALSE)
+hints(x, class = base::class(x), all.packages=FALSE)
 }
 \arguments{
   \item{x}{Any R object.  Either \code{x} or \code{class} must be supplied. }
   \item{class}{A class of objects; the default is the class of
 \code{x}. }
-  \item{allPackages}{If TRUE, look in all packages in the library for
-functions to list; if the default FALSE, use only packages that have already 
+  \item{all.packages}{If TRUE, look in all available packages for
+functions to list; if FALSE (the default), use only packages that have already 
 been loaded. }
 }
 \value{
